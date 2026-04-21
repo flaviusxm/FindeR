@@ -1,0 +1,35 @@
+# === Python & Environments ===
+# Exclude toate mediile virtuale
+venv/
+env/
+jobspy-env/
+.env
+.venv
+bin/
+lib/
+share/
+
+# === Python Cache ===
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# === Streamlit ===
+# Exclude configurațiile locale și cache-ul Streamlit
+.streamlit/
+! .streamlit/config.toml
+
+# === VS Code ===
+.vscode/
+*.code-workspace
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Data & Logs ===
+# Exclude eventualele fișiere CSV descărcate sau log-uri
+*.csv
+*.log
