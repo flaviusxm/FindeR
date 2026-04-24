@@ -2,49 +2,43 @@ import streamlit as st
 import pandas as pd
 import config 
 import manage_data
-from datetime import datetime
+import time
 
 st.set_page_config(page_title="FindeR", layout="wide")
-
+st.title("FindeR")
 
 if 'job_data' not in st.session_state:
     st.session_state.job_data = pd.DataFrame()
 
-st.title("FindeR")
-
+def show_data(df, placeholder):
+    if df.empty:
+        return
+    placeholder.dataframe(
+        df[config.DISPLAY_COLUMNS],
+        column_config={
+            "job_url": st.column_config.LinkColumn("Apply Link"),
+            "date_posted": st.column_config.DateColumn("Posted"),
+        },
+        use_container_width=True,
+        hide_index=True
+    )
 table_placeholder = st.empty()
-
 if st.session_state.job_data.empty:
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-    
-    total = len(config.CATEGORIES)
+    status = st.empty()
     all_found_jobs = []
     
     for i, cat in enumerate(config.CATEGORIES):
-        percent = int(((i + 1) / total) * 100)
-        progress_bar.progress(percent)
-        status_text.text(f"Scanning: {cat} ({i+1}/{total})")
+        status.text(f"Scanning: {cat} ({i+1}/{len(config.CATEGORIES)})")
 
         df = manage_data.get_tech_jobs(cat)
         if not df.empty:
             all_found_jobs.append(df)
-            current_combined = pd.concat(all_found_jobs).drop_duplicates(subset=['job_url'])
-            st.session_state.job_data = current_combined
-
-            table_placeholder.dataframe(
-                current_combined[config.DISPLAY_COLUMNS + ['source_cat']],
-                column_config={
-                    "job_url": st.column_config.LinkColumn("Apply Link"),
-                    "date_posted": st.column_config.DateColumn("Posted"),
-                    "source_cat": "Category"
-                },
-                use_container_width=True,
-                hide_index=True
-            )
+            st.session_state.job_data = pd.concat(all_found_jobs).drop_duplicates(subset=['job_url'])
+            show_data(st.session_state.job_data, table_placeholder)
         
-        import time
         time.sleep(1)
+    
+    status.empty()
     st.rerun()
 
 if st.button("Refresh"):
@@ -52,17 +46,5 @@ if st.button("Refresh"):
     st.rerun()
 
 
-
-    
-st.write(f"**{len(df)}** jobs")
-    
-table_placeholder.dataframe(
-        df[config.DISPLAY_COLUMNS + ['source_cat']],
-        column_config={
-            "job_url": st.column_config.LinkColumn("Apply Link"),
-            "date_posted": st.column_config.DateColumn("Posted"),
-            "source_cat": "Category"
-        },
-        use_container_width=True,
-        hide_index=True
-    )
+st.write(f"**{len(st.session_state.job_data)}** jobs found")
+show_data(st.session_state.job_data, table_placeholder)

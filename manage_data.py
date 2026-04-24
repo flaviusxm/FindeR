@@ -16,21 +16,17 @@ def get_tech_jobs(category):
         )
         if not jobs.empty:
             jobs['source_cat'] = category
-            return jobs[config.DISPLAY_COLUMNS + ['source_cat']]
+            return jobs[config.DISPLAY_COLUMNS]
     except Exception as e:
         print(f"Scraping error for {category}: {e}")
     return pd.DataFrame()
 
 def fetch_all_categories(progress_callback=None):
-    """
-    Parcurge toate categoriile și cumulează rezultatele.
-    """
     all_jobs = []
-    total = len(config.CATEGORIES)
     
     for i, cat in enumerate(config.CATEGORIES):
         if progress_callback:
-            progress_callback(i + 1, total, cat)
+            progress_callback(i + 1, len(config.CATEGORIES), cat)
         
         df = get_tech_jobs(cat)
         if not df.empty:

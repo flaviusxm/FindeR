@@ -12,12 +12,11 @@ CATEGORIES = [
 ]
 SITES = ["linkedin", "indeed"]
 LOCATION = "romania"
-RESULTS_PER_PAGE = 100 
+RESULTS_PER_PAGE = 1000 
 HOURS_OLD = 168 
 
 DISPLAY_COLUMNS = ['title', 'company', 'location', 'date_posted', 'job_url']
 
-RO_SITES = {
-    "juniors": "https://juniors.ro/jobs",
-    "devjob": "https://devjob.ro"
-}
+# RO_SITES = {
+    
+# }
