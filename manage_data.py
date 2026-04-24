@@ -1,12 +1,10 @@
 import pandas as pd
 from jobspy import scrape_jobs
 import config
+import time
 
-def get_tech_jobs(index):
-    """
-    Extrage joburile pentru o anumită categorie bazată pe index.
-    """
-    category = config.CATEGORIES[index]
+def get_tech_jobs(category):
+  
     try:
         jobs = scrape_jobs(
             site_name=config.SITES,
@@ -17,10 +15,29 @@ def get_tech_jobs(index):
             hours_old=config.HOURS_OLD
         )
         if not jobs.empty:
-            # Adăugăm sursa pentru a putea filtra ulterior în UI
             jobs['source_cat'] = category
-            # Returnăm doar coloanele de interes definite în config
             return jobs[config.DISPLAY_COLUMNS + ['source_cat']]
     except Exception as e:
         print(f"Scraping error for {category}: {e}")
+    return pd.DataFrame()
+
+def fetch_all_categories(progress_callback=None):
+    """
+    Parcurge toate categoriile și cumulează rezultatele.
+    """
+    all_jobs = []
+    total = len(config.CATEGORIES)
+    
+    for i, cat in enumerate(config.CATEGORIES):
+        if progress_callback:
+            progress_callback(i + 1, total, cat)
+        
+        df = get_tech_jobs(cat)
+        if not df.empty:
+            all_jobs.append(df)
+
+        time.sleep(1)
+    if all_jobs:
+        combined_df = pd.concat(all_jobs).drop_duplicates(subset=['job_url'])
+        return combined_df
     return pd.DataFrame()
