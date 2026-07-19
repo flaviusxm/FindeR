@@ -1,3 +1,6 @@
+from enums import JobTTL
+
+
 CATEGORIES = [
     "Software Engineer", "Frontend Developer", "Backend Developer", "Fullstack Developer",
     "Java Developer", "Python Developer", "React Developer", "Angular Developer",
@@ -10,13 +13,9 @@ CATEGORIES = [
     "Business Analyst IT", "UX/UI Designer", "Database Administrator", "Embedded Systems",
     "RPA Developer", "Salesforce Developer", "Cloud Architect", "Information Technology"
 ]
-SITES = ["linkedin", "indeed"]
+SITES = ["linkedin", "indeed","bestjobs","ejobs","hipo","juniors"]
 LOCATION = "romania"
-RESULTS_PER_PAGE = 1000 
-HOURS_OLD = 168 
+RESULTS_PER_PAGE = 1000
+HOURS_OLD = JobTTL.TODAY
 
 DISPLAY_COLUMNS = ['title', 'company', 'location', 'date_posted', 'job_url']
-
-# RO_SITES = {
-    
-# }

@@ -1,10 +1,9 @@
 import pandas as pd
-from jobspy import scrape_jobs
 import config
 import time
 
 def get_tech_jobs(category):
-  
+
     try:
         jobs = scrape_jobs(
             site_name=config.SITES,
@@ -23,11 +22,11 @@ def get_tech_jobs(category):
 
 def fetch_all_categories(progress_callback=None):
     all_jobs = []
-    
+
     for i, cat in enumerate(config.CATEGORIES):
         if progress_callback:
             progress_callback(i + 1, len(config.CATEGORIES), cat)
-        
+
         df = get_tech_jobs(cat)
         if not df.empty:
             all_jobs.append(df)
